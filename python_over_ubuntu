@@ -1,0 +1,27 @@
+FROM ubuntu:20.04
+WORKDIR /usr/src/app
+
+# copy all the files to the container
+COPY . .
+
+# try install libpython
+RUN apt update && \
+    apt install -y --no-install-recommends \
+        python3.8 \
+        python3.8-venv \
+        python3-distutils \
+        libpython2.7 \
+        libpython3.8-dev \
+        libc6-dev \
+        libstdc++6 \
+        libgomp1 \
+        libtbb-dev && \
+    rm -rf /var/lib/apt/lists/*
+# install dependencies
+RUN python3.8 -m pip install --no-cache-dir -r requirements
+
+# tell the port number the container should expose
+EXPOSE 80
+
+# run the command
+CMD ["python3.8", "./server.py"]
