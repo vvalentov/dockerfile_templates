@@ -1,0 +1,13 @@
+FROM python:3.8-slim as python
+
+RUN addgroup --system app && adduser app --system --ingroup app
+WORKDIR /home/app/
+COPY requirements .
+RUN python3 -m pip install -r requirements
+
+FROM python as builder
+COPY . .
+RUN chown -R app:app ./ && chmod -R 777 ./
+USER app
+EXPOSE 8080
+CMD ["python3", "./server.py"]
